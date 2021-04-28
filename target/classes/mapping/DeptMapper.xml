@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiangwen.mapper.DeptMapper" >
+  <resultMap id="BaseResultMap" type="com.xiangwen.model.Dept" >
+    <id column="bumenTableid" property="bumentableid" jdbcType="INTEGER" />
+    <result column="bumenTablename" property="bumentablename" jdbcType="VARCHAR" />
+    <result column="bumenTableaddress" property="bumentableaddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bumenTableid, bumenTablename, bumenTableaddress
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bumentable
+    where bumenTableid = #{bumentableid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bumentable
+    where bumenTableid = #{bumentableid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xiangwen.model.Dept" >
+    insert into bumentable (bumenTableid, bumenTablename, bumenTableaddress
+      )
+    values (#{bumentableid,jdbcType=INTEGER}, #{bumentablename,jdbcType=VARCHAR}, #{bumentableaddress,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xiangwen.model.Dept" >
+    insert into bumentable
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bumentableid != null" >
+        bumenTableid,
+      </if>
+      <if test="bumentablename != null" >
+        bumenTablename,
+      </if>
+      <if test="bumentableaddress != null" >
+        bumenTableaddress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bumentableid != null" >
+        #{bumentableid,jdbcType=INTEGER},
+      </if>
+      <if test="bumentablename != null" >
+        #{bumentablename,jdbcType=VARCHAR},
+      </if>
+      <if test="bumentableaddress != null" >
+        #{bumentableaddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiangwen.model.Dept" >
+    update bumentable
+    <set >
+      <if test="bumentablename != null" >
+        bumenTablename = #{bumentablename,jdbcType=VARCHAR},
+      </if>
+      <if test="bumentableaddress != null" >
+        bumenTableaddress = #{bumentableaddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bumenTableid = #{bumentableid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xiangwen.model.Dept" >
+    update bumentable
+    set bumenTablename = #{bumentablename,jdbcType=VARCHAR},
+      bumenTableaddress = #{bumentableaddress,jdbcType=VARCHAR}
+    where bumenTableid = #{bumentableid,jdbcType=INTEGER}
+  </update>
+</mapper>

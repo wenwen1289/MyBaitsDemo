@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiangwen.mapper.ClassModerMapper" >
+  <resultMap id="classMap" type="ClassModel">
+    <id property="classId" column="class_id" />
+    <result property="className" column="class_name"/>
+    <association property="teacher" javaType="Teacher">
+      <id property="teaId" column="tea_id"/>
+      <result property="classId" column="class_id"/>
+      <result property="teaName" column="tea_name"/>
+    </association>
+  </resultMap>
+<!--1对1嵌套查询-->
+  <resultMap id="classMap2" type="ClassModel">
+    <id property="classId" column="class_id" />
+    <result property="className" column="class_name"/>
+    <association property="teacher" column="class_id" select="findTeaByClassId"/>
+  </resultMap>
+  <!--对teacher类单独定义-->
+  <resultMap id="TeaMap" type="Teacher">
+    <id property="teaId" column="tea_id"/>
+    <result property="teaName" column="tea_name"/>
+    <result property="classId" column="class_id"/>
+  </resultMap>
+  <!--对student类单独定义-->
+  <resultMap id="stuMap" type="Student">
+    <id property="stuId" column="stu_id"/>
+    <result property="stuAge" column="stu_age"/>
+    <result property="classId" column="class_id"/>
+    <result property="stuName" column="stu_name"/>
+  </resultMap>
+  <!--1对多-->
+  <resultMap id="classNewMap" type="ClassNew">
+    <id property="classId" column="class_id"/>
+    <result property="className" column="class_name"/>
+    <collection property="students" column="class_id" select="selStu"/>
+  </resultMap>
+  <!--1对多2-->
+  <resultMap id="classNewMap2" type="ClassNew">
+    <id property="classId" column="class_id"/>
+    <result property="className" column="class_name"/>
+    <collection property="students" ofType="Student">
+      <id property="stuId" column="stu_id"/>
+      <result property="classId" column="class_id"/>
+      <result property="stuAge" column="stu_age"/>
+      <result property="stuName" column="stu_name"/>
+    </collection>
+  </resultMap>
+  <select id="findById" parameterType="java.lang.Integer" resultMap="classMap">
+    select c.class_id,c.class_name,t.tea_id,t.tea_name from class c ,teacher t where t.class_id=c.class_id and c.class_id=#{id}
+  </select>
+  <select id="findByIdTwo" parameterType="java.lang.Integer" resultMap="classMap2">
+    select c.class_id,c.class_name from class c where c.class_id=#{id}
+  </select>
+  <select id="findTeaByClassId" parameterType="int" resultMap="TeaMap">
+    select * from teacher where class_id=#{id}
+  </select>
+  <select id="findNewClass" parameterType="int" resultMap="classNewMap">
+    select c.class_id,c.class_name from class c where c.class_id=#{id}
+  </select>
+  <select id="findNewClassTwo" parameterType="int" resultMap="classNewMap2">
+    select c.class_id,c.class_name,s.* from class c,student s where c.class_id=s.class_id and  c.class_id=#{id}
+  </select>
+  <select id="selStu" parameterType="int" resultMap="stuMap">
+    select * from student where class_id =#{id}
+  </select>
+</mapper>
